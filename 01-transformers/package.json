@@ -1,0 +1,20 @@
+{
+  "name": "01-transformers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "dependencies": {
+    "tiktoken": "^1.0.22"
+  },
+  "devDependencies": {
+    "tsx": "^4.22.4"
+  }
+}
