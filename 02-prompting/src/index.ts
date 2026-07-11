@@ -8,6 +8,7 @@ import {
     COT_SYSTEM_PROMPT,
     type COT_RESPONSE_STEP,
 } from "./prompts/03-cot-prompt";
+import { getWeatherData } from "./tools";
 
 const openaiClient = new OpenAI({
     apiKey: env.OPENAI_API_KEY,
@@ -43,17 +44,48 @@ async function main(prompt = "") {
                     content: rawResult,
                 });
 
-                process.stdout.write(
-                    `🖭  (${parsedResult.step}): ${parsedResult.text}\n`,
-                );
+                if (parsedResult.step.toLowerCase() === "tool_request") {
+                    process.stdout.write(
+                        `🖭  (${parsedResult.step}): ${parsedResult.functionName}\n`,
+                    );
+                } else {
+                    process.stdout.write(
+                        `🖭  (${parsedResult.step}): ${parsedResult.text}\n`,
+                    );
+                }
 
                 if (parsedResult.step.toLowerCase() === "output") {
                     endLoop = true;
                     break;
+                }
+
+                if (parsedResult.step.toLowerCase() === "tool_request") {
+                    const { functionName, input } = parsedResult;
+
+                    switch (functionName) {
+                        case "getWeatherData":
+                            {
+                                const weatherToolResult = await getWeatherData(
+                                    input ?? "",
+                                );
+                                process.stdout.write(
+                                    `🛠️ (${functionName}:${input}) ${weatherToolResult}\n`,
+                                );
+                                MESSAGES_DB.push({
+                                    role: "developer",
+                                    content: JSON.stringify({
+                                        step: "TOOL_OUTPUT",
+                                        output: weatherToolResult,
+                                    }),
+                                });
+                                continue;
+                            }
+                            break;
+                    }
                 }
             }
         }
     }
 }
 
-main("What is 2 + 4 - 15 * 3 / 5 + 9?");
+main("What is the weather in Delhi ?");
