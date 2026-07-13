@@ -64,19 +64,29 @@ async function main(prompt = "") {
 
                     switch (functionName) {
                         case "executeCliCommand": {
-                            const cliToolResult = await executeCliCommand(
-                                input ?? "",
-                            );
-                            process.stdout.write(
-                                `🛠️ (${functionName}:${input}) ${cliToolResult}\n`,
-                            );
-                            MESSAGES_DB.push({
-                                role: "developer",
-                                content: JSON.stringify({
-                                    step: "TOOL_OUTPUT",
-                                    output: cliToolResult,
-                                }),
-                            });
+                            try {
+                                const cliToolResult = await executeCliCommand(
+                                    input ?? "",
+                                );
+                                process.stdout.write(
+                                    `🛠️ (${functionName}:${input}) ${cliToolResult}\n`,
+                                );
+                                MESSAGES_DB.push({
+                                    role: "developer",
+                                    content: JSON.stringify({
+                                        step: "TOOL_OUTPUT",
+                                        output: cliToolResult,
+                                    }),
+                                });
+                            } catch (error) {
+                                MESSAGES_DB.push({
+                                    role: "developer",
+                                    content: JSON.stringify({
+                                        status: "error",
+                                        error,
+                                    }),
+                                });
+                            }
                             continue;
                         }
                         case "getWeatherData": {
