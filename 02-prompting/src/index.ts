@@ -8,7 +8,7 @@ import {
     COT_SYSTEM_PROMPT,
     type COT_RESPONSE_STEP,
 } from "./prompts/03-cot-prompt";
-import { getWeatherData } from "./tools";
+import { getWeatherData, executeCliCommand } from "./tools";
 
 const openaiClient = new OpenAI({
     apiKey: env.OPENAI_API_KEY,
@@ -63,24 +63,38 @@ async function main(prompt = "") {
                     const { functionName, input } = parsedResult;
 
                     switch (functionName) {
-                        case "getWeatherData":
-                            {
-                                const weatherToolResult = await getWeatherData(
-                                    input ?? "",
-                                );
-                                process.stdout.write(
-                                    `🛠️ (${functionName}:${input}) ${weatherToolResult}\n`,
-                                );
-                                MESSAGES_DB.push({
-                                    role: "developer",
-                                    content: JSON.stringify({
-                                        step: "TOOL_OUTPUT",
-                                        output: weatherToolResult,
-                                    }),
-                                });
-                                continue;
-                            }
-                            break;
+                        case "executeCliCommand": {
+                            const cliToolResult = await executeCliCommand(
+                                input ?? "",
+                            );
+                            process.stdout.write(
+                                `🛠️ (${functionName}:${input}) ${cliToolResult}\n`,
+                            );
+                            MESSAGES_DB.push({
+                                role: "developer",
+                                content: JSON.stringify({
+                                    step: "TOOL_OUTPUT",
+                                    output: cliToolResult,
+                                }),
+                            });
+                            continue;
+                        }
+                        case "getWeatherData": {
+                            const weatherToolResult = await getWeatherData(
+                                input ?? "",
+                            );
+                            process.stdout.write(
+                                `🛠️ (${functionName}:${input}) ${weatherToolResult}\n`,
+                            );
+                            MESSAGES_DB.push({
+                                role: "developer",
+                                content: JSON.stringify({
+                                    step: "TOOL_OUTPUT",
+                                    output: weatherToolResult,
+                                }),
+                            });
+                            continue;
+                        }
                     }
                 }
             }
@@ -88,4 +102,6 @@ async function main(prompt = "") {
     }
 }
 
-main("What is the weather in Delhi ?");
+main(
+    "What is the weather in Delhi, Bangalore and Hyderabad. Please write all of those in a weather.txt file like you're a weather reporter ?",
+);

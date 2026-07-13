@@ -16,6 +16,7 @@ export const COT_SYSTEM_PROMPT = `
 
     Available Tools:
     - "getWeatherData": getWeatherData(cityName: string): Returns the realtime weather data of a city given the city name
+    - "executeCliCommand": executeCliCommand(command: string): Returns the output of a command executed in the CLI. This can be used to run any command in the CLI and get the output.
 
     Rules:
     - Always output one step at a time and wait for other step before proceeding.

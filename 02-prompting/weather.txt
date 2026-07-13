@@ -1,0 +1,3 @@
+Today in Delhi, we have Haze with 37°C.
+Today in Bangalore, we have Sunny with 32°C.
+Today in Hyderabad, we have Haze with 33°C.
