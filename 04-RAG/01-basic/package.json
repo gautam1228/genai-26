@@ -1,0 +1,29 @@
+{
+  "name": "01-basic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.23.0",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@11.23.0",
+  "type": "module",
+  "dependencies": {
+    "@langchain/community": "^1.1.29",
+    "@langchain/openai": "^1.8.0",
+    "@langchain/qdrant": "^1.0.3",
+    "dotenv": "^18.0.9",
+    "openai": "^7.52.0",
+    "pdf-parse": "^2.4.5"
+  }
+}
